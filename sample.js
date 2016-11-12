@@ -9,6 +9,8 @@
     
     var audio_context;
     var recorder;
+    var button;
+    var buttonEnd;
 
 
     window.onload = function init() {
@@ -46,10 +48,20 @@
 
 
                 console.log('This code is using Word 2016 or greater.');
-                $('#listen').click(function() {
-                  $("#listen").html('Save');
+                button = $('#start');
+                buttonEnd = $('#end');
+
+                button.click(function() {
+                  button.html('Save');
                   startListening();
                 });
+
+                buttonEnd.click(function() {
+                  endListening();
+                });
+
+
+
 
 
                 // TODO - Remove this
@@ -82,11 +94,43 @@
     function startListening() {
     recorder && recorder.record();
     button.disabled = true;
-    button.nextElementSibling.disabled = false;
     console.log('Recording...');
-
-
     }
+
+
+    function endListening() {
+        recorder && recorder.stop();
+        buttonEnd.disabled = true;
+        console.log('Stopped recording.');
+
+        recorder.clear();
+      }
+    
+    // create WAV download link using audio data blob
+
+
+    function createDownloadLink() {
+    recorder && recorder.exportWAV(function(blob) {
+      var url = URL.createObjectURL(blob);
+      var li = document.createElement('li');
+      var au = document.createElement('audio');
+      var hf = document.createElement('a');
+      console.log(url)
+      
+      au.controls = true;
+      au.src = url;
+      hf.href = url;
+      hf.download = new Date().toISOString() + '.wav';
+      hf.innerHTML = hf.download;
+      li.appendChild(au);
+      li.appendChild(hf);
+
+    });
+  }
+
+
+    
+
 
     /*
 
