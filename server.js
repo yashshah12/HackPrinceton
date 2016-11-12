@@ -6,6 +6,7 @@ var path = require('path');
 var fs = require('fs');
 var express = require('express');
 var app = express();
+var Recorder = require('recorderjs');
 
 // Initialize variables. 
 var port = process.env.PORT || 8080;  
@@ -47,6 +48,7 @@ app.get('/getfile', function (req, res) {
 app.get('/', function (req, res) {
     var homepage = path.join(__dirname, 'index.html');
     res.sendFile(homepage);
+    
 });
 
 // Start the app.  

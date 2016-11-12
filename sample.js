@@ -2,17 +2,55 @@
  * Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
  * See LICENSE in the project root for license information.
  */
+ // module.exports = require("./recorder").Recorder;
+
 (function() {
     "use strict";
+    
+    var audio_context;
+    var recorder;
+
+
+    window.onload = function init() {
+        try {
+          // webkit shim
+          window.AudioContext = window.AudioContext || window.webkitAudioContext;
+          navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+          window.URL = window.URL || window.webkitURL;
+          
+          audio_context = new AudioContext;
+
+          console.log("audio context", audio_context);
+          
+          console.log('Audio context set up.');
+          console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+        } catch (e) {
+          console.log("ERROR", e);
+          // alert('No web audio support in this browser!');
+        }
+        
+        navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
+          console.log('No live audio input: ' + e);
+        });
+    };
 
     // The initialize function is run each time the page is loaded.
     Office.initialize = function (reason) {
+
+
+
         $(document).ready(function () {
               
             // Use this to check whether the new API is supported in the Word client.
             if (Office.context.requirements.isSetSupported("WordApi", "1.1")) {
 
+
                 console.log('This code is using Word 2016 or greater.');
+                $('#listen').click(function() {
+                  $("#listen").html('Save');
+                  startListening();
+                });
+
 
                 // TODO - Remove this
                 // Load the story names from the service into the UI. 
@@ -28,6 +66,22 @@
             }    
         });
     };
+
+    function startUserMedia(stream) {
+      var input = audio_context.createMediaStreamSource(stream);
+      console.log('Media stream created.');
+
+      // Uncomment if you want the audio to feedback directly
+      //input.connect(audio_context.destination);
+      //__log('Input connected to audio context destination.');
+      
+      recorder = new Recorder(input);
+      console.log('Recorder initialised.');
+    }
+
+    function startListening() {
+
+    }
 
     /*
 
