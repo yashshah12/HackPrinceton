@@ -13,9 +13,11 @@
     /* UI components */
     var button;
     var buttonEnd;
-    var ul;
+    var recordingslist;
 
     var interval;
+    var text = ""
+
 
     /* Set up the Recorder */
 
@@ -51,7 +53,7 @@
                 // Init UI Components
                 button = $('#start');
                 buttonEnd = $('#end');
-                ul = $('#recordingslist');
+                recordingslist = $('#recordingslist');
 
                 // on click listeners
                 button.click(function() {
@@ -80,16 +82,22 @@
       console.log('Recorder initialised.');
     }
 
+
+
     function startListening() {
       recorder && recorder.record();
 
       interval = setInterval(function() {
-        createDownloadLink();
+        var audioFile = getAudioFile()
+        var appendingText = getTextOfSpeech()
+        text = text + appendingText
+        res.send(text)
 
         setTimeout(function(){ 
           console.log("Restart the recording"); 
           recorder.clear();
           recorder && recorder.record();
+          recordingslist.appendChild(`<li> ${appendingText} </li>`);
         }, 1000);
       }, 6000);
 
@@ -110,7 +118,7 @@
     }
     
     // create WAV download link using audio data blob
-    function createDownloadLink() {
+    function getAudioFile() {
 
       recorder && recorder.exportWAV(function(blob) {
         var url = URL.createObjectURL(blob);
@@ -118,18 +126,23 @@
         var au = document.createElement('audio');
         var hf = document.createElement('a');
         console.log("url", url);
+        console.log("blob:", blob)
         
         au.controls = true;
         au.src = url;
         console.log("au", au);
         hf.href = url;
-        hf.download = new Date().toISOString() + '.wav';
+        hf.download = new Date().toISOString() + '.wav';        
 
         hf.innerHTML = hf.download;
         li.appendChild(au);
         li.appendChild(hf);
 
       });
+   }
+
+   function getTextOfSpeech(audofile){
+
    }
 
    // EndPoint https://speech.platform.bing.com/synthesize
