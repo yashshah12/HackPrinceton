@@ -6,7 +6,6 @@ var path = require('path');
 var fs = require('fs');
 var express = require('express');
 var app = express();
-var Recorder = require('recorderjs');
 
 // Initialize variables. 
 var port = process.env.PORT || 8080;  

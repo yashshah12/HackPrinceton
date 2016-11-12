@@ -80,6 +80,11 @@
     }
 
     function startListening() {
+    recorder && recorder.record();
+    button.disabled = true;
+    button.nextElementSibling.disabled = false;
+    console.log('Recording...');
+
 
     }
 
