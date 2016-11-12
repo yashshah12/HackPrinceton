@@ -141,19 +141,8 @@
       });
    }
 
-   function getTextOfSpeech(audofile){
+   function getTextOfSpeech(audiofile){
 
    }
 
-   // EndPoint https://speech.platform.bing.com/synthesize
-   function callTextToSpeechAPI() {
-    var request = new XMLHttpRequest();
-      request.open("POST", 'https://speech.platform.bing.com/synthesize', true);
-      request.onreadystatechange = function() { 
-          if (request.readyState === 4 && request.status === 200)
-              console.log(request.responseText);
-      }
-      request.send(null);
-
-   }
 })();
